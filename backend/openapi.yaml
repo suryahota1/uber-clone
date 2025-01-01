@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  title: uber-clone app backend service
+  version: 1.0.0
+  description: This file needs to be updated manually for any changes
+paths:
+  /register:
+    post:
+      summary: Register a new user
+      description: This endpoint registers a new user and returns a JWT token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - firstName
+                - email
+                - password
+              properties:
+                firstName:
+                  type: string
+                  example: johndoe
+                lastName:
+                  type: string
+                  example: johndoe
+                email:
+                  type: string
+                  example: johndoe@example.com
+                password:
+                  type: string
+                  example: password123
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 60d0fe4f5311236168a109ca
+                      firstName:
+                        type: string
+                        example: johndoe
+                      lastName:
+                        type: string
+                        example: johndoe
+                      email:
+                        type: string
+                        example: johndoe@example.com
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '400':
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        msg:
+                          type: string
+                          example: Invalid value
+                        param:
+                          type: string
+                          example: username
+                        location:
+                          type: string
+                          example: body
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Something went wrong
