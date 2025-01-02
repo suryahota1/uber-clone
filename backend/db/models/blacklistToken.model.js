@@ -1,6 +1,6 @@
 const { mongoose } = require("mongoose");
 
-const backlistTokenSchema = mongoose.Schema({
+const backlistTokenSchema = new mongoose.Schema({
     token: {
         type: String,
         required: true,

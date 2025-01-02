@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const userSchema = new mongoose.Schema({
+const { vehicleSchema } = require("./vehicle.model");
+const { LocationSchema } = require("./location.model");
+
+const CaptainSchema = new mongoose.Schema({
     firstName: {
         type: String,
         required: true,
@@ -24,27 +27,36 @@ const userSchema = new mongoose.Schema({
         required: true,
         select: false
     },
-    socketId: {
-        type: String
+    active: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    vehicle: {
+        type: vehicleSchema,
+        required: true
+    },
+    location: {
+        type: LocationSchema
     }
 });
 
-userSchema.methods.generateAuthToken = function () {
+CaptainSchema.methods.generateAuthToken = function () {
     return jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: "24h"});
 }
 
-userSchema.methods.comparePassword = async function ( password ) {
+CaptainSchema.methods.comparePassword = async function ( password ) {
     return await bcrypt.compare(password, this.password);
 }
 
-userSchema.statics.hashPassowrd = async function ( password ) {
+CaptainSchema.statics.hashPassowrd = async function ( password ) {
     return await bcrypt.hash(password, 10);
 }
 
-userSchema.set('toJSON', { 
+CaptainSchema.set('toJSON', { 
     transform: function(doc, ret, options) { 
         delete ret.password; return ret;
     }
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("Captain", CaptainSchema);
